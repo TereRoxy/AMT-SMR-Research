@@ -1,0 +1,9 @@
+*.pdf
+*.docx
+*.odt
+*.h5
+*.npy
+*.pyc
+reasearch/research_project_tex.txt
+significance_result.txt
+/.idea

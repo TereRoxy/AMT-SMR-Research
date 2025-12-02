@@ -8,10 +8,10 @@
 /dataSources.local.xml
 
 # Dataset files
-.h5
+*.h5
 
 # Research papers
-.pdf
+*.pdf
 
 
 # Python virtual environments
