@@ -1,0 +1,54 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+# Dataset files
+.h5
+
+# Research papers
+.pdf
+
+
+# Python virtual environments
+venv/
+.env/
+
+# PyCharm specific files
+.idea/
+
+# Byte-compiled files
+__pycache__/
+*.py[cod]
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Test coverage reports
+htmlcov/
+.coverage
+*.cover
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+*.eggs/
+
+# Cache files
+*.cache
+*.pkl
+*.db
+.cache/
+.pyc
