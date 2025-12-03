@@ -101,6 +101,42 @@ def mutate(individual: set, mutation_rate=MUTATION_RATE) -> set:
             new_ind.add(np.random.randint(21, 109))
     return new_ind
 
+def fitness_magnitude(individual, target_fft, lambda_poly=0.3):
+    """Magnitude residual with simple dynamic noise floor and polyphony penalty."""
+    if not individual:
+        return 1e6
+
+    # synthesize and get magnitude
+    synth = synthesize_pitch_set(individual, norm_mode=NormalizationMode.PEAK)
+    synth *= np.hanning(FRAME_SIZE)
+    sfft = np.fft.rfft(synth)
+    mag_t = np.abs(target_fft)
+    mag_s = np.abs(sfft)
+
+    # Dynamic noise floor est: median of low-energy bins (robust)
+    noise_floor = np.median(mag_t) * 0.5
+    mag_t_clipped = np.maximum(mag_t - noise_floor, 0.0)
+    mag_s_clipped = np.maximum(mag_s - noise_floor, 0.0)
+
+    residual = np.linalg.norm(mag_t_clipped - mag_s_clipped)**2 / (len(mag_t_clipped) + 1e-12)
+
+    # polyphony penalty (paper: (max(0, N-6))^2 * lambda)
+    poly_pen = lambda_poly * max(0, len(individual) - 6)**2
+
+    # optional consonance/dissonance terms (keep small)
+    cons = 0.0
+    pitches = sorted(individual)
+    for i in range(len(pitches)):
+        for j in range(i+1, len(pitches)):
+            interval = abs(pitches[i] - pitches[j]) % 12
+            if interval in {0, 5, 7}:
+                cons -= 0.2
+            if interval in {1, 2, 6, 11}:
+                cons += 0.6
+
+    return float(residual + poly_pen + cons)
+
+
 # --- Tournament selection ---
 def tournament_select(population, fitnesses, k=TOURNAMENT_SIZE):
     # print("Performing tournament selection.")

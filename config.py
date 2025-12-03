@@ -12,7 +12,7 @@ HARMONIC_LIMIT_HZ = 8000        # Upper limit for harmonics in synthesis -->
 
 # GA parameters (MVP: simplified)
 POPULATION_SIZE = 80
-NUM_GENERATIONS = 120
+NUM_GENERATIONS = 100
 TOURNAMENT_SIZE = 5
 ELITISM_RATE = 0.05
 MUTATION_RATE = 0.35

@@ -1,0 +1,6 @@
+FFT Peaks       F1: 0.2857  Residual: 15.4310
+SMR+GA          F1: 0.3197  Residual: 12.2345
+Uniform+GA      F1: 0.9685  Residual: 0.3994
+Mutation-only   F1: 0.9379  Residual: 0.5905
+
+Wilcoxon p-values (SMR better):
