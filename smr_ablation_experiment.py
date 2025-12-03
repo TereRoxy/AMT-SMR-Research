@@ -32,11 +32,11 @@ EXAMPLES_DIR = os.path.join(OUT_DIR, "examples")
 os.makedirs(OUT_DIR, exist_ok=True)
 os.makedirs(EXAMPLES_DIR, exist_ok=True)
 
-N_SAMPLES = 80
+N_SAMPLES = 10
 MIN_NOTES, MAX_NOTES = 2, 6
 MIN_PITCH, MAX_PITCH = 36, 96
 SNR_DB = 30.0
-GA_GENERATIONS = 100
+GA_GENERATIONS = 25
 np.random.seed(1234)
 
 # Fitness function (shared)
@@ -89,7 +89,10 @@ def run_ga_variant(target_fft: np.ndarray, crossover_func) -> Set[int]:
                 child = mutation_only(p1)
             else:
                 p2 = tournament_select(population, fitnesses, k=TOURNAMENT_SIZE)
-                child = crossover_func(p1, p2)
+                if crossover_func == smr_crossover:
+                    child = crossover_func(p1, p2, target_fft=target_fft)
+                else:
+                    child = crossover_func(p1, p2)
             child = mutate(child, mutation_rate=MUTATION_RATE)
             new_pop.append(child)
 
@@ -119,7 +122,7 @@ def run_ablation_experiment():
 
     print(f"Running full GA ablation on {N_SAMPLES} synthetic frames...")
     for i in range(N_SAMPLES):
-        if i % 20 == 0:
+        if i % 10 == 0:
             print(f"  Sample {i}/{N_SAMPLES}")
 
         # Generate ground truth
