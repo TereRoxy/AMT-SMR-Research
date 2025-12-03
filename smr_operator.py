@@ -2,7 +2,7 @@
 import numpy as np
 from synthesizer import synthesize_pitch_set
 from pitch_detect import detect_pitches_from_frame
-from config import FRAME_SIZE
+from config import FRAME_SIZE, SAMPLE_RATE
 
 def random_mask(shape, alpha_min=0.25, alpha_max=0.75):
     return np.random.uniform(alpha_min, alpha_max, size=shape)
@@ -15,9 +15,9 @@ def smr_crossover(parent1: set, parent2: set, frame_size: int = FRAME_SIZE):
     # smixed = W * s1 + (1 - W) * s2
 
     # Take magnitude from random blend, phase from the louder parent (Wiener-style)
-    mag1 = np.abs(S1)
-    mag2 = np.abs(S2)
-    phase = np.angle(S1 if np.mean(mag1) > np.mean(mag2) else S2)
+    mag1 = np.abs(s1)
+    mag2 = np.abs(s2)
+    phase = np.angle(s1 if np.mean(mag1) > np.mean(mag2) else s2)
 
     mask = np.random.uniform(0.3, 0.7, size=mag1.shape)
     mag_child = mask * mag1 + (1 - mask) * mag2
@@ -26,6 +26,8 @@ def smr_crossover(parent1: set, parent2: set, frame_size: int = FRAME_SIZE):
     child_wave = np.fft.irfft(child_complex, n=frame_size)
     child_wave /= np.max(np.abs(child_wave)) + 1e-8
     child_wave *= np.hanning(frame_size)
+
+    smixed = np.fft.rfft(child_wave)
 
     # More conservative peak picking for SMR children
     child_set = detect_pitches_from_frame(smixed, max_pitches=10, thresh_rel=0.035)
